@@ -3,8 +3,8 @@ from src.boundary_detector import BoundaryDetector
 from src.decision_engine import DecisionEngine
 from src.response_generator import ResponseGenerator
 
-class Pipeline:
 
+class Pipeline:
     def __init__(self):
         self.scorer = ConfidenceScorer()
         self.detector = BoundaryDetector()
@@ -21,11 +21,16 @@ class Pipeline:
         boundary_result = self.detector.classify(query)
 
         # Step 2 - Score confidence
-        if logits:
+        if logits is not None:
             confidence = self.scorer.score(logits, method="softmax")
         else:
-            # Default mid confidence if no logits provided
-            confidence = 0.80 if boundary_result == "IN_DISTRIBUTION" else 0.40
+            # Default confidence if no logits provided
+            if boundary_result == "IN_DISTRIBUTION":
+                confidence = 0.80
+            elif boundary_result == "AMBIGUOUS":
+                confidence = 0.60
+            else:
+                confidence = 0.40
 
         # Step 3 - Make decision
         decision = self.engine.decide(confidence, boundary_result)
@@ -39,5 +44,5 @@ class Pipeline:
             "boundary": boundary_result,
             "confidence": round(confidence, 4),
             "decision": decision,
-            "response": response
-        } 
+            "response": response,
+        }
