@@ -1,0 +1,5 @@
+How does machine learning work?
+What is a neural network?
+Explain supervised learning.
+What is the difference between AI and ML?
+How does gradient descent work? 
