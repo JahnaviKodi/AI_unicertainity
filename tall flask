@@ -1,0 +1,13 @@
+[33mb18c300[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;33mtag: [m[1;33mv1.0.0[m[33m)[m Final project complete
+[33m3deef80[m Add technical documentation
+[33m8652cfe[m Add UX guidelines
+[33m3391a63[m Fix punctuation stripping in ambiguity detection
+[33m950fb2f[m Add unit tests
+[33m8ac5043[m Add full pipeline
+[33m784aa2a[m Add ground truth labels
+[33m0728780[m Add sample data files
+[33m353418d[m Add response generator module
+[33mf33cffb[m Add decision engine module
+[33m216be5e[m Add boundary detector module
+[33m919f7d0[m Add confidence scorer module
+[33m6fff64b[m Initial project structure

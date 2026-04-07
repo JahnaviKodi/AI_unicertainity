@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Uncertainty System</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      width: 100%;
+      max-width: 700px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #1f3864;
+      margin-bottom: 8px;
+      font-size: 24px;
+    }
+
+    p.subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      resize: none;
+      height: 100px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    textarea:focus {
+      border-color: #2e75b6;
+    }
+
+    button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 14px;
+      background: #1f3864;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #2e75b6;
+    }
+
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .ANSWER    { background: #e8f5e9; border-left: 5px solid #4caf50; }
+    .CLARIFY   { background: #fff8e1; border-left: 5px solid #ffc107; }
+    .ABSTAIN   { background: #fdecea; border-left: 5px solid #f44336; }
+    .ESCALATE  { background: #f3e5f5; border-left: 5px solid #9c27b0; }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .badge.ANSWER   { background: #4caf50; }
+    .badge.CLARIFY  { background: #ffc107; color: #333; }
+    .badge.ABSTAIN  { background: #f44336; }
+    .badge.ESCALATE { background: #9c27b0; }
+
+    .response-text {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .meta span {
+      margin-right: 16px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Uncertainty System</h1>
+    <p class="subtitle">Ask anything. The AI will answer, clarify, abstain, or escalate based on confidence.</p>
+
+    <textarea id="query" placeholder="Type your question here..."></textarea>
+    <button onclick="askQuestion()">Ask</button>
+
+    <div class="loading" id="loading">Thinking...</div>
+
+    <div class="result" id="result">
+      <div class="badge" id="badge"></div>
+      <div class="response-text" id="response"></div>
+      <div class="meta">
+        <span id="confidence"></span>
+        <span id="boundary"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function askQuestion() {
+      const query = document.getElementById("query").value.trim();
+      if (!query) return;
+
+      document.getElementById("result").style.display = "none";
+      document.getElementById("loading").style.display = "block";
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+
+      const data = await res.json();
+      document.getElementById("loading").style.display = "none";
+
+      const decision = data.decision;
+
+      const badge = document.getElementById("badge");
+      badge.textContent = decision;
+      badge.className = "badge " + decision;
+
+      document.getElementById("response").textContent = data.response;
+      document.getElementById("confidence").textContent = "Confidence: " + data.confidence;
+      document.getElementById("boundary").textContent = "Category: " + data.boundary;
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.className = "result " + decision;
+      resultDiv.style.display = "block";
+    }
+
+    // Allow Enter key to submit
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        askQuestion();
+      }
+    });
+  </script>
+</body>
+</html> 
