@@ -134,6 +134,52 @@
 
     /* LAYOUT */
     .layout { display: grid; grid-template-columns: 310px 1fr; gap: 20px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; padding: 10px; gap: 12px; }
+  .sidebar { order: 2; }
+  .main { order: 1; }
+  .header { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .header h1 { font-size: 15px; }
+  .header h1 span { font-size: 10px; }
+  .hdr-btn { padding: 5px 10px; font-size: 11px; }
+  .header-right { gap: 6px; }
+  .tabs { padding: 10px 10px 0; gap: 2px; }
+  .tab { padding: 7px 12px; font-size: 11px; }
+  .rings-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .ring-wrap { width: 55px; height: 55px; }
+  .ring-wrap svg { width: 55px; height: 55px; }
+  .ring-label { font-size: 10px; }
+  .ring-name { font-size: 9px; }
+  .ring-count { font-size: 9px; }
+  .total-box .num { font-size: 32px; }
+  textarea { height: 80px; font-size: 14px; padding: 12px 40px 32px 36px; }
+  .ask-btn { padding: 11px; font-size: 13px; }
+  .clear-btn { padding: 11px 14px; font-size: 12px; }
+  .input-card { padding: 14px; }
+  .card { padding: 14px; border-radius: 12px; }
+  .eval-stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .eval-stat-card .num { font-size: 32px; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .chat-actions { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .action-row { flex-wrap: wrap; gap: 4px; }
+  .act-btn { padding: 5px 10px; font-size: 11px; }
+  .badge { font-size: 10px; padding: 3px 10px; }
+  .chat-header { flex-direction: column; gap: 6px; align-items: flex-start; }
+  .chat-meta-top { align-self: flex-end; }
+  .empty-state { padding: 40px 16px; }
+  .empty-state .icon { font-size: 48px; }
+  .empty-state h3 { font-size: 16px; }
+  .eval-container { padding: 12px; }
+  table { font-size: 11px; }
+  th, td { padding: 8px 10px; }
+  .compare-card { padding: 14px; }
+  .compare-card h3 { font-size: 13px; }
+  .history-card { padding: 14px; }
+  .suggestions { gap: 6px; }
+  .suggestion-btn { padding: 8px 10px; font-size: 12px; }
+}
+
     .sidebar { display: flex; flex-direction: column; gap: 16px; }
 
     /* GLASSMORPHISM CARDS */
