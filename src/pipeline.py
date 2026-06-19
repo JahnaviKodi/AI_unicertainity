@@ -1,42 +1,48 @@
 import os
+import logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 from dotenv import load_dotenv
-import anthropic
+from groq import Groq
 from src.confidence_scorer import ConfidenceScorer
 from src.boundary_detector import BoundaryDetector
 from src.decision_engine import DecisionEngine
 from src.response_generator import ResponseGenerator
-
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 class Pipeline:
 
     def __init__(self):
-        self.scorer = ConfidenceScorer()
-        self.detector = BoundaryDetector()
-        self.engine = DecisionEngine()
+        self.scorer    = ConfidenceScorer()
+        self.detector  = BoundaryDetector()
+        self.engine    = DecisionEngine()
         self.generator = ResponseGenerator()
-        self.client = anthropic.Anthropic(
-            api_key=os.getenv("ANTHROPIC_API_KEY")
+        self.client    = Groq(
+            api_key=os.getenv("GROQ_API_KEY")
         )
 
     def get_real_answer(self, query):
         """
-        Calls Claude API to get a real answer.
+        Calls Groq API to get a real answer.
+        Uses Llama 3 model — completely free.
         """
-        message = self.client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=500,
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "user", "content": query}
-            ]
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant. Answer clearly and concisely."
+                },
+                {
+                    "role": "user",
+                    "content": query
+                }
+            ],
+            max_tokens=500
         )
-        return message.content[0].text
+        return response.choices[0].message.content
 
     def run(self, query, logits=None, answer=None):
-        """
-        Full pipeline. Pass in a query and get back
-        a final response with decision details.
-        """
 
         # Step 1 - Classify the query
         boundary_result = self.detector.classify(query)
@@ -55,13 +61,13 @@ class Pipeline:
         # Step 3 - Make decision
         decision = self.engine.decide(confidence, boundary_result)
 
-        # Step 4 - Get real answer from Claude if decision is ANSWER
+        # Step 4 - Get real answer from Groq if decision is ANSWER
         if decision == "ANSWER":
             try:
                 real_answer = self.get_real_answer(query)
             except Exception as e:
                 real_answer = None
-                print(f"API error: {e}")
+                logger.error(f"Groq API error: {e}")
         else:
             real_answer = None
 
@@ -69,9 +75,9 @@ class Pipeline:
         response = self.generator.generate(decision, query, real_answer)
 
         return {
-            "query": query,
-            "boundary": boundary_result,
+            "query":      query,
+            "boundary":   boundary_result,
             "confidence": round(confidence, 4),
-            "decision": decision,
-            "response": response
+            "decision":   decision,
+            "response":   response
         }

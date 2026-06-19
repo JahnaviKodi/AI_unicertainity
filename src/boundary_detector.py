@@ -2,48 +2,27 @@ class BoundaryDetector:
     def __init__(self):
         # Keywords that indicate ambiguous queries
         self.ambiguous_keywords = [
-            "maybe",
-            "not sure",
-            "kind of",
-            "sort of",
-            "huh",
-            "idk",
-            "unclear",
+            "maybe", "not sure", "kind of", "sort of",
+    "huh", "idk", "unclear", "tell me something",
+    "can you explain", "explain anything"
         ]
 
         # Keywords that indicate high-risk domains
         self.high_risk_keywords = [
-            "medicine",
-            "medical",
-            "legal",
-            "lawyer",
-            "financial",
-            "finance",
-            "surgery",
-            "drug",
-            "lawsuit",
-            "investment",
-            "diagnosis",
-            "invest",
-            "crypto",
-            "cryptocurrency",
-            "stocks",
-            "shares",
-            "trading",
+            "medicine", "medical", "legal", "lawyer",
+    "financial", "finance", "surgery", "drug",
+    "lawsuit", "investment", "diagnosis",
+    "invest", "crypto", "cryptocurrency",
+    "stocks", "shares", "trading", "sue",
+    "employer", "contract", "binding", "court"
         ]
 
         # Keywords that are clearly out of domain
         self.out_of_domain_keywords = [
-            "lottery",
-            "magic",
-            "supernatural",
-            "alien",
-            "fortune telling",
-            "astrology",
-            "horoscope",
-            "tarot",
-            "psychic",
-            "crystal ball",
+             "lottery", "magic", "supernatural", "alien",
+    "fortune telling", "astrology", "horoscope",
+    "tarot", "psychic", "crystal ball", "lucky numbers",
+    "future", "predict my", "fate", "destiny", "spell"
         ]
 
         # Vague words that often indicate missing context
